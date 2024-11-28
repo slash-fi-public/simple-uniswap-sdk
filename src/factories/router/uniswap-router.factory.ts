@@ -450,7 +450,7 @@ export class UniswapRouterFactory {
       }
     }
 
-    // console.log('contractCallContext', contractCallContext);
+    console.log('contractCallContext', contractCallContext);
 
     const contractCallResults = await this._multicall.call(contractCallContext);
 
