@@ -908,7 +908,7 @@ export class UniswapRouterFactory {
       const params: ExactOutputSingleRequest = {
         tokenIn: removeEthFromContractAddress(this._fromToken.contractAddress),
         tokenOut: removeEthFromContractAddress(this._toToken.contractAddress),
-        fee: percentToFeeAmount(routeQuoteTradeContext.liquidityProviderFee[0]),
+        fee: percentToFeeAmount(routeQuoteTradeContext.liquidityProviderFee),
         recipient:
           isNativeReceivingNativeEth === true
             ? '0x0000000000000000000000000000000000000000'
