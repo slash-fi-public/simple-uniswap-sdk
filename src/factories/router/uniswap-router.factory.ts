@@ -179,8 +179,17 @@ export class UniswapRouterFactory {
           if (isSameAddress(fromToken.contractAddress, toToken.contractAddress))
             continue;
 
-          for (let fee = 0; fee < 4; fee++) {
-            const feeAmount = [FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.FIVE_THOUSAND, FeeAmount.HIGH][
+          let times = 3
+          let feeArray = [FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH]
+
+          // OAS has additional 5000 pool fees
+          if(this._settings?.customNetwork?.nativeCurrency.symbol === 'OAS') {
+            times = 4
+            feeArray = [FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.FIVE_THOUSAND, FeeAmount.HIGH]
+          }
+          
+          for (let fee = 0; fee < times; fee++) {
+            const feeAmount = feeArray[
               fee
             ];
             v3Calls.push({

@@ -99,10 +99,11 @@ var UniswapRouterFactory = /** @class */ (function () {
      * you go.
      */
     UniswapRouterFactory.prototype.getAllPossibleRoutes = function () {
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function () {
-            var findPairs, contractCallContext, pairs, tokenPairs, fromToken, toToken, v3Calls, pairs, tokenPairs, fromToken, toToken, fee, feeAmount, allPossibleRoutes, contractCallResults, results, availablePairs, fromTokenRoutes, toTokenRoutes, allMainRoutes, i, fromTokenPairs, toTokenPairs, results, availablePairs, fromTokenRoutes, toTokenRoutes, allMainRoutes, i, fromTokenPairs, toTokenPairs;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var findPairs, contractCallContext, pairs, tokenPairs, fromToken, toToken, v3Calls, pairs, tokenPairs, fromToken, toToken, times, feeArray, fee, feeAmount, allPossibleRoutes, contractCallResults, results, availablePairs, fromTokenRoutes, toTokenRoutes, allMainRoutes, i, fromTokenPairs, toTokenPairs, results, availablePairs, fromTokenRoutes, toTokenRoutes, allMainRoutes, i, fromTokenPairs, toTokenPairs;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
                         findPairs = [];
                         if (!this._settings.disableMultihops) {
@@ -156,8 +157,15 @@ var UniswapRouterFactory = /** @class */ (function () {
                                     toToken = findPairs[pairs][tokenPairs][1];
                                     if (is_same_address_1.isSameAddress(fromToken.contractAddress, toToken.contractAddress))
                                         continue;
-                                    for (fee = 0; fee < 4; fee++) {
-                                        feeAmount = [fee_amount_v3_1.FeeAmount.LOW, fee_amount_v3_1.FeeAmount.MEDIUM, fee_amount_v3_1.FeeAmount.FIVE_THOUSAND, fee_amount_v3_1.FeeAmount.HIGH][fee];
+                                    times = 3;
+                                    feeArray = [fee_amount_v3_1.FeeAmount.LOW, fee_amount_v3_1.FeeAmount.MEDIUM, fee_amount_v3_1.FeeAmount.HIGH];
+                                    // OAS has additional 5000 pool fees
+                                    if (((_b = (_a = this._settings) === null || _a === void 0 ? void 0 : _a.customNetwork) === null || _b === void 0 ? void 0 : _b.nativeCurrency.symbol) === 'OAS') {
+                                        times = 4;
+                                        feeArray = [fee_amount_v3_1.FeeAmount.LOW, fee_amount_v3_1.FeeAmount.MEDIUM, fee_amount_v3_1.FeeAmount.FIVE_THOUSAND, fee_amount_v3_1.FeeAmount.HIGH];
+                                    }
+                                    for (fee = 0; fee < times; fee++) {
+                                        feeAmount = feeArray[fee];
                                         v3Calls.push({
                                             reference: fromToken.contractAddress + "-" + toToken.contractAddress + "-" + fromToken.symbol + "/" + toToken.symbol + "-" + feeAmount,
                                             methodName: 'getPool',
@@ -180,7 +188,7 @@ var UniswapRouterFactory = /** @class */ (function () {
                         allPossibleRoutes = { v2: [], v3: [] };
                         return [4 /*yield*/, this._multicall.call(contractCallContext)];
                     case 1:
-                        contractCallResults = _a.sent();
+                        contractCallResults = _c.sent();
                         if (this._settings.uniswapVersions.includes(uniswap_version_1.UniswapVersion.v2)) {
                             results = contractCallResults.results[uniswap_version_1.UniswapVersion.v2];
                             availablePairs = results.callsReturnContext.filter(function (c) {
