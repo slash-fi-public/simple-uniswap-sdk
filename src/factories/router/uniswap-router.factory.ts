@@ -179,8 +179,8 @@ export class UniswapRouterFactory {
           if (isSameAddress(fromToken.contractAddress, toToken.contractAddress))
             continue;
 
-          for (let fee = 0; fee < 3; fee++) {
-            const feeAmount = [FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH][
+          for (let fee = 0; fee < 4; fee++) {
+            const feeAmount = [FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.FIVE_THOUSAND, FeeAmount.HIGH][
               fee
             ];
             v3Calls.push({
