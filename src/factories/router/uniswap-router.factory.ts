@@ -179,8 +179,17 @@ export class UniswapRouterFactory {
           if (isSameAddress(fromToken.contractAddress, toToken.contractAddress))
             continue;
 
-          for (let fee = 0; fee < 3; fee++) {
-            const feeAmount = [FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH][
+          let times = 3
+          let feeArray = [FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH]
+
+          // OAS has additional 5000 pool fees
+          if(this._settings?.customNetwork?.nativeCurrency.symbol === 'OAS') {
+            times = 4
+            feeArray = [FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.FIVE_THOUSAND, FeeAmount.HIGH]
+          }
+          
+          for (let fee = 0; fee < times; fee++) {
+            const feeAmount = feeArray[
               fee
             ];
             v3Calls.push({
@@ -450,7 +459,7 @@ export class UniswapRouterFactory {
       }
     }
 
-    // console.log('contractCallContext', contractCallContext);
+    console.log('contractCallContext', contractCallContext);
 
     const contractCallResults = await this._multicall.call(contractCallContext);
 
@@ -908,7 +917,7 @@ export class UniswapRouterFactory {
       const params: ExactOutputSingleRequest = {
         tokenIn: removeEthFromContractAddress(this._fromToken.contractAddress),
         tokenOut: removeEthFromContractAddress(this._toToken.contractAddress),
-        fee: percentToFeeAmount(routeQuoteTradeContext.liquidityProviderFee[0]),
+        fee: percentToFeeAmount(routeQuoteTradeContext.liquidityProviderFee),
         recipient:
           isNativeReceivingNativeEth === true
             ? '0x0000000000000000000000000000000000000000'
