@@ -6,6 +6,7 @@ export var FeeAmount;
     FeeAmount[FeeAmount["HIGH"] = 10000] = "HIGH";
 })(FeeAmount || (FeeAmount = {}));
 export var feeToPercent = function (feeAmount) {
+    console.log('feeAmount', feeAmount);
     switch (feeAmount) {
         case FeeAmount.LOW:
             return 0.0005;
@@ -18,6 +19,7 @@ export var feeToPercent = function (feeAmount) {
     }
 };
 export var percentToFeeAmount = function (percent) {
+    console.log('percent', percent);
     switch (percent) {
         case 0.0005:
             return FeeAmount.LOW;
