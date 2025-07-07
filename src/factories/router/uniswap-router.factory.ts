@@ -191,7 +191,7 @@ export class UniswapRouterFactory {
           // KAIA Dragonswap has additional 1000 pool fees
           if(this._settings?.customNetwork?.nativeCurrency.symbol === 'KAIA') {
             times = 4
-            feeArray = [FeeAmount.LOW, FeeAmount.ONE_THOUSAND, FeeAmount.HIGH]
+            feeArray = [FeeAmount.LOW, FeeAmount.ONE_THOUSAND, FeeAmount.MEDIUM, FeeAmount.HIGH]
           }
           
           for (let fee = 0; fee < times; fee++) {
