@@ -293,12 +293,12 @@ export class UniswapRouterFactory {
 
     if (this._settings.uniswapVersions.includes(UniswapVersion.v3)) {
       const results = contractCallResults.results[UniswapVersion.v3];
-
       const availablePairs = results.callsReturnContext.filter(
         (c) =>
           c.returnValues[0] !== '0x0000000000000000000000000000000000000000'
       );
-      // console.log('available pairs', availablePairs);
+
+      // console.log('availablePairs', availablePairs);
 
       const fromTokenRoutes: TokenRoutes = {
         token: this._fromToken,
@@ -350,8 +350,8 @@ export class UniswapRouterFactory {
         });
       }
 
-      // console.log('allMainRoutes');
-      // console.log(JSON.stringify(allMainRoutes, null, 4));
+      console.log('allMainRoutes');
+      console.log(JSON.stringify(allMainRoutes, null, 4));
 
       allPossibleRoutes.v3 = this.workOutAllPossibleRoutesV3(
         fromTokenRoutes,
@@ -1566,18 +1566,20 @@ export class UniswapRouterFactory {
     );
 
     const routes: RouteContext[] = [];
-    const directRoute = fromTokenRoutes.pairs.fromTokenPairs!.find((t) =>
+    const directRoutes = fromTokenRoutes.pairs.fromTokenPairs!.filter((t) =>
       isSameAddress(
         t.token.contractAddress,
         toTokenRoutes.token.contractAddress
       )
     );
-    if (directRoute) {
-      routes.push({
-        route: [fromTokenRoutes.token, toTokenRoutes.token],
-        liquidityProviderFee: 0,
-        liquidityProviderFeesV3: [feeToPercent(directRoute.fee!)],
-      });
+    if (directRoutes.length > 0) {
+      for (const directRoute of directRoutes) {
+        routes.push({
+          route: [fromTokenRoutes.token, toTokenRoutes.token],
+          liquidityProviderFee: 0,
+          liquidityProviderFeesV3: [feeToPercent(directRoute.fee!)],
+        });
+      }
     }
 
     for (let i = 0; i < allMainRoutes.length; i++) {

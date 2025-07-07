@@ -250,8 +250,8 @@ var UniswapRouterFactory = /** @class */ (function () {
                                     pairs: { fromTokenPairs: fromTokenPairs, toTokenPairs: toTokenPairs },
                                 });
                             }
-                            // console.log('allMainRoutes');
-                            // console.log(JSON.stringify(allMainRoutes, null, 4));
+                            console.log('allMainRoutes');
+                            console.log(JSON.stringify(allMainRoutes, null, 4));
                             allPossibleRoutes.v3 = this.workOutAllPossibleRoutesV3(fromTokenRoutes, toTokenRoutes, allMainRoutes);
                         }
                         console.log(JSON.stringify(allPossibleRoutes, null, 4));
@@ -1109,15 +1109,18 @@ var UniswapRouterFactory = /** @class */ (function () {
             });
         });
         var routes = [];
-        var directRoute = fromTokenRoutes.pairs.fromTokenPairs.find(function (t) {
+        var directRoutes = fromTokenRoutes.pairs.fromTokenPairs.filter(function (t) {
             return is_same_address_1.isSameAddress(t.token.contractAddress, toTokenRoutes.token.contractAddress);
         });
-        if (directRoute) {
-            routes.push({
-                route: [fromTokenRoutes.token, toTokenRoutes.token],
-                liquidityProviderFee: 0,
-                liquidityProviderFeesV3: [fee_amount_v3_1.feeToPercent(directRoute.fee)],
-            });
+        if (directRoutes.length > 0) {
+            for (var _i = 0, directRoutes_1 = directRoutes; _i < directRoutes_1.length; _i++) {
+                var directRoute = directRoutes_1[_i];
+                routes.push({
+                    route: [fromTokenRoutes.token, toTokenRoutes.token],
+                    liquidityProviderFee: 0,
+                    liquidityProviderFeesV3: [fee_amount_v3_1.feeToPercent(directRoute.fee)],
+                });
+            }
         }
         var _loop_6 = function (i) {
             var tokenRoute = allMainRoutes[i];
