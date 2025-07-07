@@ -93,11 +93,11 @@ var UniswapRouterFactory = /** @class */ (function () {
      * you go.
      */
     UniswapRouterFactory.prototype.getAllPossibleRoutes = function () {
-        var _a, _b;
+        var _a, _b, _c, _d;
         return __awaiter(this, void 0, void 0, function () {
             var findPairs, contractCallContext, pairs, tokenPairs, fromToken, toToken, v3Calls, pairs, tokenPairs, fromToken, toToken, times, feeArray, fee, feeAmount, allPossibleRoutes, contractCallResults, results, availablePairs, fromTokenRoutes, toTokenRoutes, allMainRoutes, i, fromTokenPairs, toTokenPairs, results, availablePairs, fromTokenRoutes, toTokenRoutes, allMainRoutes, i, fromTokenPairs, toTokenPairs;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
+            return __generator(this, function (_e) {
+                switch (_e.label) {
                     case 0:
                         findPairs = [];
                         if (!this._settings.disableMultihops) {
@@ -158,6 +158,11 @@ var UniswapRouterFactory = /** @class */ (function () {
                                         times = 4;
                                         feeArray = [FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.FIVE_THOUSAND, FeeAmount.HIGH];
                                     }
+                                    // KAIA Dragonswap has additional 1000 pool fees
+                                    if (((_d = (_c = this._settings) === null || _c === void 0 ? void 0 : _c.customNetwork) === null || _d === void 0 ? void 0 : _d.nativeCurrency.symbol) === 'KAIA') {
+                                        times = 4;
+                                        feeArray = [FeeAmount.LOW, FeeAmount.ONE_THOUSAND, FeeAmount.HIGH];
+                                    }
                                     for (fee = 0; fee < times; fee++) {
                                         feeAmount = feeArray[fee];
                                         v3Calls.push({
@@ -182,7 +187,7 @@ var UniswapRouterFactory = /** @class */ (function () {
                         allPossibleRoutes = { v2: [], v3: [] };
                         return [4 /*yield*/, this._multicall.call(contractCallContext)];
                     case 1:
-                        contractCallResults = _c.sent();
+                        contractCallResults = _e.sent();
                         if (this._settings.uniswapVersions.includes(UniswapVersion.v2)) {
                             results = contractCallResults.results[UniswapVersion.v2];
                             availablePairs = results.callsReturnContext.filter(function (c) {
@@ -243,7 +248,7 @@ var UniswapRouterFactory = /** @class */ (function () {
                             // console.log(JSON.stringify(allMainRoutes, null, 4));
                             allPossibleRoutes.v3 = this.workOutAllPossibleRoutesV3(fromTokenRoutes, toTokenRoutes, allMainRoutes);
                         }
-                        // console.log(JSON.stringify(allPossibleRoutes, null, 4));
+                        console.log(JSON.stringify(allPossibleRoutes, null, 4));
                         return [2 /*return*/, allPossibleRoutes];
                 }
             });

@@ -187,6 +187,12 @@ export class UniswapRouterFactory {
             times = 4
             feeArray = [FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.FIVE_THOUSAND, FeeAmount.HIGH]
           }
+
+          // KAIA Dragonswap has additional 1000 pool fees
+          if(this._settings?.customNetwork?.nativeCurrency.symbol === 'KAIA') {
+            times = 4
+            feeArray = [FeeAmount.LOW, FeeAmount.ONE_THOUSAND, FeeAmount.HIGH]
+          }
           
           for (let fee = 0; fee < times; fee++) {
             const feeAmount = feeArray[
@@ -354,7 +360,7 @@ export class UniswapRouterFactory {
       );
     }
 
-    // console.log(JSON.stringify(allPossibleRoutes, null, 4));
+    console.log(JSON.stringify(allPossibleRoutes, null, 4));
 
     return allPossibleRoutes;
   }

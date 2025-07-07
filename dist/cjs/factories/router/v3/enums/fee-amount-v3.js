@@ -4,6 +4,7 @@ exports.percentToFeeAmount = exports.feeToPercent = exports.FeeAmount = void 0;
 var FeeAmount;
 (function (FeeAmount) {
     FeeAmount[FeeAmount["LOW"] = 500] = "LOW";
+    FeeAmount[FeeAmount["ONE_THOUSAND"] = 1000] = "ONE_THOUSAND";
     FeeAmount[FeeAmount["MEDIUM"] = 3000] = "MEDIUM";
     FeeAmount[FeeAmount["FIVE_THOUSAND"] = 5000] = "FIVE_THOUSAND";
     FeeAmount[FeeAmount["HIGH"] = 10000] = "HIGH";
@@ -13,6 +14,8 @@ var feeToPercent = function (feeAmount) {
     switch (feeAmount) {
         case FeeAmount.LOW:
             return 0.0005;
+        case FeeAmount.ONE_THOUSAND:
+            return 0.001;
         case FeeAmount.MEDIUM:
             return 0.003;
         case FeeAmount.FIVE_THOUSAND:
@@ -27,6 +30,8 @@ var percentToFeeAmount = function (percent) {
     switch (percent) {
         case 0.0005:
             return FeeAmount.LOW;
+        case 0.001:
+            return FeeAmount.ONE_THOUSAND;
         case 0.003:
             return FeeAmount.MEDIUM;
         case 0.005:
