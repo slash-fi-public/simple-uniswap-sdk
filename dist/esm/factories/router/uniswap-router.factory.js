@@ -248,7 +248,7 @@ var UniswapRouterFactory = /** @class */ (function () {
                             // console.log(JSON.stringify(allMainRoutes, null, 4));
                             allPossibleRoutes.v3 = this.workOutAllPossibleRoutesV3(fromTokenRoutes, toTokenRoutes, allMainRoutes);
                         }
-                        console.log(JSON.stringify(allPossibleRoutes, null, 4));
+                        // console.log(JSON.stringify(allPossibleRoutes, null, 4));
                         return [2 /*return*/, allPossibleRoutes];
                 }
             });

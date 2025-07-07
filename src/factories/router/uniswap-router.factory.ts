@@ -360,7 +360,7 @@ export class UniswapRouterFactory {
       );
     }
 
-    console.log(JSON.stringify(allPossibleRoutes, null, 4));
+    // console.log(JSON.stringify(allPossibleRoutes, null, 4));
 
     return allPossibleRoutes;
   }
