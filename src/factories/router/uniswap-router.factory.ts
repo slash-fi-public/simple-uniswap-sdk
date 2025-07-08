@@ -1573,14 +1573,22 @@ export class UniswapRouterFactory {
       )
     );
     if (directRoutes.length > 0) {
-      for (const directRoute of directRoutes) {
-        routes.push({
-          route: [fromTokenRoutes.token, toTokenRoutes.token],
-          liquidityProviderFee: 0,
+      // add direct route if the route with the same liquidityProviderFeesV3 doesn't exist in array yet
+      for (const directRoute of directRoutes ) {
+        if (!routes.find((r) =>
+          r.route[0] === fromTokenRoutes.token &&
+          r.route[1] === toTokenRoutes.token &&
+          r.liquidityProviderFeesV3[0] === feeToPercent(directRoute.fee!)
+        )) {
+          routes.push({
+            route: [fromTokenRoutes.token, toTokenRoutes.token],
+            liquidityProviderFee: 0,
           liquidityProviderFeesV3: [feeToPercent(directRoute.fee!)],
-        });
+          });
+        }
       }
     }
+
 
     for (let i = 0; i < allMainRoutes.length; i++) {
       const tokenRoute = allMainRoutes[i];

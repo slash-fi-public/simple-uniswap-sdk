@@ -1107,16 +1107,26 @@ var UniswapRouterFactory = /** @class */ (function () {
             return isSameAddress(t.token.contractAddress, toTokenRoutes.token.contractAddress);
         });
         if (directRoutes.length > 0) {
+            var _loop_6 = function (directRoute) {
+                if (!routes.find(function (r) {
+                    return r.route[0] === fromTokenRoutes.token &&
+                        r.route[1] === toTokenRoutes.token &&
+                        r.liquidityProviderFeesV3[0] === feeToPercent(directRoute.fee);
+                })) {
+                    routes.push({
+                        route: [fromTokenRoutes.token, toTokenRoutes.token],
+                        liquidityProviderFee: 0,
+                        liquidityProviderFeesV3: [feeToPercent(directRoute.fee)],
+                    });
+                }
+            };
+            // add direct route if the route with the same liquidityProviderFeesV3 doesn't exist in array yet
             for (var _i = 0, directRoutes_1 = directRoutes; _i < directRoutes_1.length; _i++) {
                 var directRoute = directRoutes_1[_i];
-                routes.push({
-                    route: [fromTokenRoutes.token, toTokenRoutes.token],
-                    liquidityProviderFee: 0,
-                    liquidityProviderFeesV3: [feeToPercent(directRoute.fee)],
-                });
+                _loop_6(directRoute);
             }
         }
-        var _loop_6 = function (i) {
+        var _loop_7 = function (i) {
             var tokenRoute = allMainRoutes[i];
             if (jointCompatibleRoutes.find(function (c) {
                 return isSameAddress(c.token.contractAddress, tokenRoute.token.contractAddress);
@@ -1135,7 +1145,7 @@ var UniswapRouterFactory = /** @class */ (function () {
                         feeToPercent(feeMain2To),
                     ],
                 });
-                var _loop_7 = function (f) {
+                var _loop_8 = function (f) {
                     var fromSupportedToken = fromTokenRoutes.pairs.fromTokenPairs[f].token;
                     if (tokenRoute.pairs.toTokenPairs.find(function (pair) {
                         return isSameAddress(pair.token.contractAddress, fromSupportedToken.contractAddress);
@@ -1165,9 +1175,9 @@ var UniswapRouterFactory = /** @class */ (function () {
                     }
                 };
                 for (var f = 0; f < fromTokenRoutes.pairs.fromTokenPairs.length; f++) {
-                    _loop_7(f);
+                    _loop_8(f);
                 }
-                var _loop_8 = function (f) {
+                var _loop_9 = function (f) {
                     var toSupportedToken = toTokenRoutes.pairs.toTokenPairs[f].token;
                     if (tokenRoute.pairs.fromTokenPairs.find(function (pair) {
                         return pair.token.contractAddress.toLowerCase() ===
@@ -1199,12 +1209,12 @@ var UniswapRouterFactory = /** @class */ (function () {
                     }
                 };
                 for (var f = 0; f < toTokenRoutes.pairs.toTokenPairs.length; f++) {
-                    _loop_8(f);
+                    _loop_9(f);
                 }
             }
         };
         for (var i = 0; i < allMainRoutes.length; i++) {
-            _loop_6(i);
+            _loop_7(i);
         }
         return routes;
     };
@@ -1218,7 +1228,7 @@ var UniswapRouterFactory = /** @class */ (function () {
     };
     UniswapRouterFactory.prototype.getFromRouterDirectionAvailablePairsV3 = function (token, allAvailablePairs) {
         var pools = [];
-        var _loop_9 = function (index) {
+        var _loop_10 = function (index) {
             var context = allAvailablePairs[index];
             if (isSameAddress(context.reference.split('-')[0], token.contractAddress)) {
                 pools.push({
@@ -1231,13 +1241,13 @@ var UniswapRouterFactory = /** @class */ (function () {
         };
         var this_4 = this;
         for (var index = 0; index < allAvailablePairs.length; index++) {
-            _loop_9(index);
+            _loop_10(index);
         }
         return pools;
     };
     UniswapRouterFactory.prototype.getToRouterDirectionAvailablePairsV3 = function (token, allAvailablePairs) {
         var pools = [];
-        var _loop_10 = function (index) {
+        var _loop_11 = function (index) {
             var context = allAvailablePairs[index];
             if (isSameAddress(context.reference.split('-')[1], token.contractAddress)) {
                 pools.push({
@@ -1250,7 +1260,7 @@ var UniswapRouterFactory = /** @class */ (function () {
         };
         var this_5 = this;
         for (var index = 0; index < allAvailablePairs.length; index++) {
-            _loop_10(index);
+            _loop_11(index);
         }
         return pools;
     };
