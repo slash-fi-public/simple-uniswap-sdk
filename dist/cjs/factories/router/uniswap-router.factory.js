@@ -169,9 +169,9 @@ var UniswapRouterFactory = /** @class */ (function () {
                                         times = 4;
                                         feeArray = [fee_amount_v3_1.FeeAmount.LOW, fee_amount_v3_1.FeeAmount.ONE_THOUSAND, fee_amount_v3_1.FeeAmount.MEDIUM, fee_amount_v3_1.FeeAmount.HIGH];
                                     }
-                                    // Mantle AGNI USDT0 > USDT has additional 1000 pool fees
+                                    // Mantle AGNI USDT0 > USDT has additional 100 pool fees
                                     if (((_f = (_e = this._settings) === null || _e === void 0 ? void 0 : _e.customNetwork) === null || _f === void 0 ? void 0 : _f.nativeCurrency.symbol) === 'MNT') {
-                                        times = 3;
+                                        times = 4;
                                         feeArray = [fee_amount_v3_1.FeeAmount.ONE_HUNDRED, fee_amount_v3_1.FeeAmount.LOW, fee_amount_v3_1.FeeAmount.MEDIUM, fee_amount_v3_1.FeeAmount.HIGH];
                                     }
                                     for (fee = 0; fee < times; fee++) {
