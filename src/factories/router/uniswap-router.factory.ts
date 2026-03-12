@@ -179,8 +179,29 @@ export class UniswapRouterFactory {
           if (isSameAddress(fromToken.contractAddress, toToken.contractAddress))
             continue;
 
-          for (let fee = 0; fee < 3; fee++) {
-            const feeAmount = [FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH][
+          let times = 3
+          let feeArray = [FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH]
+
+          // OAS has additional 5000 pool fees
+          if(this._settings?.customNetwork?.nativeCurrency.symbol === 'OAS') {
+            times = 4
+            feeArray = [FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.FIVE_THOUSAND, FeeAmount.HIGH]
+          }
+
+          // KAIA Dragonswap has additional 1000 pool fees
+          if(this._settings?.customNetwork?.nativeCurrency.symbol === 'KAIA') {
+            times = 4
+            feeArray = [FeeAmount.LOW, FeeAmount.ONE_THOUSAND, FeeAmount.MEDIUM, FeeAmount.HIGH]
+          }
+
+          // Mantle AGNI USDT0 > USDT has additional 100 pool fees
+          if(this._settings?.customNetwork?.nativeCurrency.symbol === 'MNT') {
+            times = 4
+            feeArray = [FeeAmount.ONE_HUNDRED, FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH]
+          }
+          
+          for (let fee = 0; fee < times; fee++) {
+            const feeAmount = feeArray[
               fee
             ];
             v3Calls.push({
@@ -278,12 +299,12 @@ export class UniswapRouterFactory {
 
     if (this._settings.uniswapVersions.includes(UniswapVersion.v3)) {
       const results = contractCallResults.results[UniswapVersion.v3];
-
       const availablePairs = results.callsReturnContext.filter(
         (c) =>
           c.returnValues[0] !== '0x0000000000000000000000000000000000000000'
       );
-      // console.log('available pairs', availablePairs);
+
+      // console.log('availablePairs', availablePairs);
 
       const fromTokenRoutes: TokenRoutes = {
         token: this._fromToken,
@@ -335,8 +356,8 @@ export class UniswapRouterFactory {
         });
       }
 
-      // console.log('allMainRoutes');
-      // console.log(JSON.stringify(allMainRoutes, null, 4));
+      console.log('allMainRoutes');
+      console.log(JSON.stringify(allMainRoutes, null, 4));
 
       allPossibleRoutes.v3 = this.workOutAllPossibleRoutesV3(
         fromTokenRoutes,
@@ -345,7 +366,7 @@ export class UniswapRouterFactory {
       );
     }
 
-    // console.log(JSON.stringify(allPossibleRoutes, null, 4));
+    console.log(JSON.stringify(allPossibleRoutes, null, 4));
 
     return allPossibleRoutes;
   }
@@ -450,7 +471,7 @@ export class UniswapRouterFactory {
       }
     }
 
-    // console.log('contractCallContext', contractCallContext);
+    console.log('contractCallContext', contractCallContext);
 
     const contractCallResults = await this._multicall.call(contractCallContext);
 
@@ -908,7 +929,7 @@ export class UniswapRouterFactory {
       const params: ExactOutputSingleRequest = {
         tokenIn: removeEthFromContractAddress(this._fromToken.contractAddress),
         tokenOut: removeEthFromContractAddress(this._toToken.contractAddress),
-        fee: percentToFeeAmount(routeQuoteTradeContext.liquidityProviderFee[0]),
+        fee: percentToFeeAmount(routeQuoteTradeContext.liquidityProviderFee),
         recipient:
           isNativeReceivingNativeEth === true
             ? '0x0000000000000000000000000000000000000000'
@@ -1551,19 +1572,29 @@ export class UniswapRouterFactory {
     );
 
     const routes: RouteContext[] = [];
-    const directRoute = fromTokenRoutes.pairs.fromTokenPairs!.find((t) =>
+    const directRoutes = fromTokenRoutes.pairs.fromTokenPairs!.filter((t) =>
       isSameAddress(
         t.token.contractAddress,
         toTokenRoutes.token.contractAddress
       )
     );
-    if (directRoute) {
-      routes.push({
-        route: [fromTokenRoutes.token, toTokenRoutes.token],
-        liquidityProviderFee: 0,
-        liquidityProviderFeesV3: [feeToPercent(directRoute.fee!)],
-      });
+    if (directRoutes.length > 0) {
+      // add direct route if the route with the same liquidityProviderFeesV3 doesn't exist in array yet
+      for (const directRoute of directRoutes ) {
+        if (!routes.find((r) =>
+          r.route[0] === fromTokenRoutes.token &&
+          r.route[1] === toTokenRoutes.token &&
+          r.liquidityProviderFeesV3[0] === feeToPercent(directRoute.fee!)
+        )) {
+          routes.push({
+            route: [fromTokenRoutes.token, toTokenRoutes.token],
+            liquidityProviderFee: 0,
+          liquidityProviderFeesV3: [feeToPercent(directRoute.fee!)],
+          });
+        }
+      }
     }
+
 
     for (let i = 0; i < allMainRoutes.length; i++) {
       const tokenRoute = allMainRoutes[i];
