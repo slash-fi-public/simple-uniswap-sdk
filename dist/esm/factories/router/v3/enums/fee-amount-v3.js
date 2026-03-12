@@ -1,5 +1,6 @@
 export var FeeAmount;
 (function (FeeAmount) {
+    FeeAmount[FeeAmount["ONE_HUNDRED"] = 100] = "ONE_HUNDRED";
     FeeAmount[FeeAmount["LOW"] = 500] = "LOW";
     FeeAmount[FeeAmount["ONE_THOUSAND"] = 1000] = "ONE_THOUSAND";
     FeeAmount[FeeAmount["MEDIUM"] = 3000] = "MEDIUM";
@@ -9,6 +10,8 @@ export var FeeAmount;
 export var feeToPercent = function (feeAmount) {
     console.log('feeAmount', feeAmount);
     switch (feeAmount) {
+        case FeeAmount.ONE_HUNDRED:
+            return 0.0001;
         case FeeAmount.LOW:
             return 0.0005;
         case FeeAmount.ONE_THOUSAND:
@@ -22,8 +25,9 @@ export var feeToPercent = function (feeAmount) {
     }
 };
 export var percentToFeeAmount = function (percent) {
-    console.log('percent', percent);
     switch (percent) {
+        case 0.0001:
+            return FeeAmount.ONE_HUNDRED;
         case 0.0005:
             return FeeAmount.LOW;
         case 0.001:

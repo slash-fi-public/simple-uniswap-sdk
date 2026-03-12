@@ -1,4 +1,5 @@
 export enum FeeAmount {
+  ONE_HUNDRED = 100,
   LOW = 500,
   ONE_THOUSAND = 1000,
   MEDIUM = 3000,
@@ -9,6 +10,8 @@ export enum FeeAmount {
 export const feeToPercent = (feeAmount: FeeAmount) => {
   console.log('feeAmount', feeAmount);
   switch (feeAmount) {
+    case FeeAmount.ONE_HUNDRED:
+      return 0.0001;
     case FeeAmount.LOW:
       return 0.0005;
     case FeeAmount.ONE_THOUSAND:
@@ -23,8 +26,9 @@ export const feeToPercent = (feeAmount: FeeAmount) => {
 };
 
 export const percentToFeeAmount = (percent: number) => {
-  console.log('percent', percent);
   switch (percent) {
+    case 0.0001:
+      return FeeAmount.ONE_HUNDRED;
     case 0.0005:
       return FeeAmount.LOW;
     case 0.001:

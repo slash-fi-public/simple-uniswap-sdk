@@ -193,6 +193,12 @@ export class UniswapRouterFactory {
             times = 4
             feeArray = [FeeAmount.LOW, FeeAmount.ONE_THOUSAND, FeeAmount.MEDIUM, FeeAmount.HIGH]
           }
+
+          // Mantle AGNI USDT0 > USDT has additional 1000 pool fees
+          if(this._settings?.customNetwork?.nativeCurrency.symbol === 'MNT') {
+            times = 3
+            feeArray = [FeeAmount.ONE_HUNDRED, FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH]
+          }
           
           for (let fee = 0; fee < times; fee++) {
             const feeAmount = feeArray[

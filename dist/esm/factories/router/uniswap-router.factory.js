@@ -93,11 +93,11 @@ var UniswapRouterFactory = /** @class */ (function () {
      * you go.
      */
     UniswapRouterFactory.prototype.getAllPossibleRoutes = function () {
-        var _a, _b, _c, _d;
+        var _a, _b, _c, _d, _e, _f;
         return __awaiter(this, void 0, void 0, function () {
             var findPairs, contractCallContext, pairs, tokenPairs, fromToken, toToken, v3Calls, pairs, tokenPairs, fromToken, toToken, times, feeArray, fee, feeAmount, allPossibleRoutes, contractCallResults, results, availablePairs, fromTokenRoutes, toTokenRoutes, allMainRoutes, i, fromTokenPairs, toTokenPairs, results, availablePairs, fromTokenRoutes, toTokenRoutes, allMainRoutes, i, fromTokenPairs, toTokenPairs;
-            return __generator(this, function (_e) {
-                switch (_e.label) {
+            return __generator(this, function (_g) {
+                switch (_g.label) {
                     case 0:
                         findPairs = [];
                         if (!this._settings.disableMultihops) {
@@ -163,6 +163,11 @@ var UniswapRouterFactory = /** @class */ (function () {
                                         times = 4;
                                         feeArray = [FeeAmount.LOW, FeeAmount.ONE_THOUSAND, FeeAmount.MEDIUM, FeeAmount.HIGH];
                                     }
+                                    // Mantle AGNI USDT0 > USDT has additional 1000 pool fees
+                                    if (((_f = (_e = this._settings) === null || _e === void 0 ? void 0 : _e.customNetwork) === null || _f === void 0 ? void 0 : _f.nativeCurrency.symbol) === 'MNT') {
+                                        times = 3;
+                                        feeArray = [FeeAmount.ONE_HUNDRED, FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH];
+                                    }
                                     for (fee = 0; fee < times; fee++) {
                                         feeAmount = feeArray[fee];
                                         v3Calls.push({
@@ -187,7 +192,7 @@ var UniswapRouterFactory = /** @class */ (function () {
                         allPossibleRoutes = { v2: [], v3: [] };
                         return [4 /*yield*/, this._multicall.call(contractCallContext)];
                     case 1:
-                        contractCallResults = _e.sent();
+                        contractCallResults = _g.sent();
                         if (this._settings.uniswapVersions.includes(UniswapVersion.v2)) {
                             results = contractCallResults.results[UniswapVersion.v2];
                             availablePairs = results.callsReturnContext.filter(function (c) {

@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.percentToFeeAmount = exports.feeToPercent = exports.FeeAmount = void 0;
 var FeeAmount;
 (function (FeeAmount) {
+    FeeAmount[FeeAmount["ONE_HUNDRED"] = 100] = "ONE_HUNDRED";
     FeeAmount[FeeAmount["LOW"] = 500] = "LOW";
     FeeAmount[FeeAmount["ONE_THOUSAND"] = 1000] = "ONE_THOUSAND";
     FeeAmount[FeeAmount["MEDIUM"] = 3000] = "MEDIUM";
@@ -12,6 +13,8 @@ var FeeAmount;
 var feeToPercent = function (feeAmount) {
     console.log('feeAmount', feeAmount);
     switch (feeAmount) {
+        case FeeAmount.ONE_HUNDRED:
+            return 0.0001;
         case FeeAmount.LOW:
             return 0.0005;
         case FeeAmount.ONE_THOUSAND:
@@ -26,8 +29,9 @@ var feeToPercent = function (feeAmount) {
 };
 exports.feeToPercent = feeToPercent;
 var percentToFeeAmount = function (percent) {
-    console.log('percent', percent);
     switch (percent) {
+        case 0.0001:
+            return FeeAmount.ONE_HUNDRED;
         case 0.0005:
             return FeeAmount.LOW;
         case 0.001:
